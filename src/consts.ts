@@ -56,26 +56,21 @@ export const SOCIALS: Socials = [
   { 
     NAME: "Email",
     ICON: "email", 
-    TEXT: "nilooy.dev@gmail.com",
-    HREF: "mailto:nilooy.dev@gmail.com",
+    TEXT: "rifqialba12@gmail.com",
+    HREF: "mailto:rifqialba12@gmail.com",
   },
   { 
     NAME: "Github",
     ICON: "github",
-    TEXT: "nilooy",
-    HREF: "https://github.com/nilooy"
+    TEXT: "rifqialbaa",
+    HREF: "https://github.com/rifqialbaa"
   },
   { 
     NAME: "LinkedIn",
     ICON: "linkedin",
-    TEXT: "rezwanferdousniloy",
-    HREF: "https://www.linkedin.com/in/rezwanferdousniloy",
+    TEXT: "rifqialba",
+    HREF: "https://www.linkedin.com/in/rifqialba",
   },
-  { 
-    NAME: "Twitter",
-    ICON: "twitter-x",
-    TEXT: "nil_ooy",
-    HREF: "https://twitter.com/nil_ooy",
-  },
+  
 ]
 
