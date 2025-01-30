@@ -1,175 +1,249 @@
 ---
-import "@styles/global.css"
-import { getCollection } from "astro:content"
-import PageLayout from "@layouts/PageLayout.astro"
-import ArrowCard from "@components/ArrowCard"
-import StackCard from "@components/StackCard.astro"
-import { SITE, SOCIALS } from "@consts"
-import BaseHead from "@components/BaseHead.astro"
-import WorkList from "@components/WorkList.astro"
+import "@styles/global.css";
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import ArrowCard from "@components/ArrowCard";
+import StackCard from "@components/StackCard.astro";
+import { SITE, SOCIALS } from "@consts";
+import BaseHead from "@components/BaseHead.astro";
+import WorkList from "@components/WorkList.astro";
+import { downloadPDF } from "@components/pdf"; // Impor fungsi downloadPDF
 
 const posts = (await getCollection("blog"))
-  .filter(post => !post.data.draft)
+  .filter((post) => !post.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0,3)
+  .slice(0, 3);
 
 const projects = (await getCollection("projects"))
-  .filter(project => !project.data.draft)
+  .filter((project) => !project.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0,3)
+  .slice(0, 3);
 
 const stack = [
-  { 
-    text: "Javascript", 
-    icon: "devicon:javascript", 
+  {
+    text: "Javascript",
+    icon: "devicon:javascript",
   },
-  { 
-    text: "Typescript", 
+  {
+    text: "Typescript",
     icon: "devicon:typescript",
   },
-  { 
-    text: "React.js", 
-    icon: "logos:react", 
+  {
+    text: "React.js",
+    icon: "logos:react",
   },
-  { 
-    text: "Next.js", 
-    icon: "cib:next-js", 
+  {
+    text: "Next.js",
+    icon: "cib:next-js",
   },
-  { 
-    text: "Node.js", 
-    icon: "vscode-icons:file-type-node", 
+  {
+    text: "Node.js",
+    icon: "vscode-icons:file-type-node",
   },
-    {
-        text: "Nest.js",
-        icon: "logos:nestjs",
-    },
-  { 
-    text: "Postgresql", 
-    icon: "devicon:postgresql", 
+  {
+    text: "Nest.js",
+    icon: "logos:nestjs",
   },
-  { 
-    text: "Mysql", 
-    icon: "skill-icons:mysql-light", 
+  {
+    text: "Postgresql",
+    icon: "devicon:postgresql",
   },
-  { 
-    text: "Google Cloud", 
-    icon: "devicon:googlecloud", 
+  {
+    text: "Mysql",
+    icon: "skill-icons:mysql-light",
   },
-  { 
-    text: "Tailwind", 
-    icon: "vscode-icons:file-type-tailwind", 
+  {
+    text: "Google Cloud",
+    icon: "devicon:googlecloud",
   },
-]
+  {
+    text: "Tailwind",
+    icon: "vscode-icons:file-type-tailwind",
+  },
+  {
+    text: "Python",
+    icon: "vscode-icons:file-type-python",
+  },
+];
 
 const infos = [
-{
-NAME: 'Location',
-TEXT: 'Torino, Italy'
-},
-{
-NAME: 'Cell',
-TEXT: '+393207221599',
-HREF: 'tel:+393207221599'
-},
-...SOCIALS, 
- 
-]
+  {
+    NAME: "Location",
+    TEXT: "West Java, Indonesia",
+  },
+  {
+    NAME: "Phone",
+    TEXT: "+6289673655183",
+    HREF: "tel:+6289673655183",
+  },
+  ...SOCIALS,
+];
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title={`${'CV'} | ${SITE.TITLE}`} description={''} />
+    <BaseHead title={`${"CV"} | ${SITE.TITLE}`} description={""} />
+    <!-- Tambahkan library html2pdf.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   </head>
+
   <body>
     <main>
-        <div class="max-w-screen-md m-auto flex my-20" title="Home">
-            <div class="w-[70%] border-r pr-2">
-                <!-- HERO -->
-                <section class="relative h-auto w-full mt-4">
-                    <div>
-                        <h1 class="text-2xl">Md Rezwan Ferdous Niloy</h1>
-                        <p class="text-xl font-bold">Senior Fullstack Engineer @ Theseus AI</p>
-                        <p class="text-sm my-2">
-                            As a Senior Full-Stack Engineer at Theseus AI with over 7 years in tech, I specialize in developing innovative web applications. My expertise in the JavaScript ecosystem and leadership in launching transformative platforms showcases my passion for tackling complex problems and driving technological advancements.
-                        </p>
-                    </div>
-                    
-              
-              
-                <div class="relative bg-white dark:bg-black">
-                  <div class="mx-auto mt-4 space-y-24 pb-16">
-              
-                    <!-- Work Section -->
-                    <section>
-                      <div class="space-y-4">
-                        <div class="flex justify-between">
-                          <p class="font-semibold text-black dark:text-white">
-                            Experiences
-                          </p>
-                        </div>
-                        <ul class="space-y-4">
-                            <WorkList isCompact={true}/>
-                        </ul>
-                      </div>
-                    </section>
-    
-                    
-                  </div>
-                </div>
-                </div>
-            <div class="w-[30%] pl-4">
-                <div class="grid grid-cols-6 gap-y-1 mt-4 auto-cols-min text-[13px]">
-                    {infos.map(info => (
-                      <div class="col-span-2 flex items-center gap-1">
-                        <span class="whitespace-nowrap">
-                          {info.NAME}
-                        </span>
-                      </div>
-                      <div class="col-span-4">
-                        <a href={info.HREF} target="_blank" class="w-fit col-span-3 group flex gap-1 items-center underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend">
-                          <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
-                            {info.TEXT}
-                          </span>
-                        </a>
-                      </div>
-                    ))}
-                </div>
-                <div class="mt-4">
-                    <p class="text-md font-bold">Skills</strong>
-                    <ul class="list-disc ml-2">
-                      {stack.map(item => (
-                          <li class="text-sm">{item.text}</li>
-                      ))}
-                    </ul>
-                </div>
+      <!-- Tombol Back to Home -->
+      <div class="absolute top-5 left-5">
+        <a
+          href="/"
+          class="group flex items-center gap-2 py-2 px-4 rounded truncate text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend transition-colors duration-300 ease-in-out"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="stroke-current group-hover:stroke-black group-hover:dark:stroke-white"
+          >
+            <line
+              x1="19"
+              y1="12"
+              x2="5"
+              y2="12"
+              class="scale-x-0 group-hover:scale-x-100 translate-x-3 group-hover:translate-x-0 transition-all duration-300 ease-in-out"
+            ></line>
+            <polyline
+              points="12 19 5 12 12 5"
+              class="translate-x-1 group-hover:translate-x-0 transition-all duration-300 ease-in-out"></polyline>
+          </svg>
+          <span
+            class="w-full group-hover:text-black group-hover:dark:text-white transition-colors duration-300 ease-in-out"
+          >
+            Back to Home
+          </span>
+        </a>
+      </div>
 
-                <div class="mt-4">
-                    <p class="text-md font-bold">Certifications</strong>
-                    <ul class="list-disc ml-2">
-                          <li class="text-sm">Ethical Hacking with JavaScript</li>
-                          <li class="text-sm">React: Managing Complex</li>
-                          <li class="text-sm">Interactions</li>
-                          <li class="text-sm">Docker on AWS</li>
-                          <li class="text-sm">Migrating from REST to GraphQL</li>
-                          <li class="text-sm">Advanced Node.js</li>
-                    </ul>
-                </div>
+      <!-- Tombol Download CV -->
+      <div class="absolute top-5 right-5">
+        <button
+          onclick="downloadPDF()"
+          class="flex items-center gap-2 py-2 px-4 rounded truncate text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend transition-colors duration-300 ease-in-out"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="stroke-current"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Download CV</span>
+        </button>
+      </div>
 
-                <div class="mt-4">
-                    <p class="text-md font-bold">Skills</strong>
-                    <ul class="list-disc ml-2">
-                          <li class="text-sm">English (Fluent)</li>
-                          <li class="text-sm">Italian (Professional)</li>
-                    </ul>
-                </div>
-                
+      <!-- Konten CV -->
+      <div class="max-w-screen-md m-auto flex my-20" title="Home">
+        <div class="w-[70%] border-r pr-2">
+          <section class="relative h-auto w-full mt-4">
+            <div>
+              <h1 class="text-2xl">Rifqi Syahrizal Fadhil Alba</h1>
+              <p class="text-xl font-bold">Software Engineer</p>
+              <p class="text-sm my-2">
+                As a Full-Stack with over 2 years of experience in the tech industry, I specialize in developing web
+                applications and processing data for building machine learning and AI-based models. My expertise in the
+                JavaScript ecosystem and my role in developing innovative platforms reflect my passion for solving
+                complex challenges and driving technological advancements.
+              </p>
             </div>
-           
-        
+            <div class="relative bg-white dark:bg-black">
+              <div class="mx-auto mt-4 space-y-24 pb-16">
+                <!-- Work Section -->
+                <section>
+                  <div class="space-y-4">
+                    <div class="flex justify-between">
+                      <p class="font-semibold text-black dark:text-white">Experiences</p>
+                    </div>
+                    <ul class="space-y-4">
+                      <WorkList isCompact={true} />
+                    </ul>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </section>
         </div>
+        <div class="w-[30%] pl-4">
+          <div class="grid grid-cols-6 gap-y-1 mt-4 auto-cols-min text-[13px]">
+            {
+              infos.map((info) => (
+                <>
+                  <div class="col-span-2 flex items-center gap-1">
+                    <span class="whitespace-nowrap">{info.NAME}</span>
+                  </div>
+                  <div class="col-span-4">
+                    <a
+                      href={info.HREF}
+                      target="_blank"
+                      class="w-fit col-span-3 group flex gap-1 items-center underline decoration-[.5px] decoration-black/25 dark:decoration-white/50 hover:decoration-black dark:hover:decoration-white text-black dark:text-white underline-offset-2 blend"
+                    >
+                      <span class="text-black/75 dark:text-white/75 group-hover:text-black group-hover:dark:text-white blend">
+                        {info.TEXT}
+                      </span>
+                    </a>
+                  </div>
+                </>
+              ))
+            }
+          </div>
+
+          <div class="mt-4">
+            <p class="text-md font-bold">Skills</p>
+            <ul class="list-disc ml-2">
+              {stack.map((item) => <li class="text-sm">{item.text}</li>)}
+            </ul>
+          </div>
+          <div class="mt-4">
+            <p class="text-md font-bold">Certifications</p>
+            <ul class="list-disc ml-2">
+              <li class="text-sm"><a href="fewfe">Ethical Hacking with JavaScript</a></li>
+            </ul>
+          </div>
+          <div class="mt-4">
+            <p class="text-md font-bold">Languages</p>
+            <ul class="list-disc ml-2">
+              <li class="text-sm">English (Intermediate)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </main>
+
+    <!-- Tambahkan script untuk memastikan fungsi downloadPDF tersedia di global scope -->
+    <script>
+      // Ekspor fungsi downloadPDF ke global scope
+      // @ts-ignore
+      window.downloadPDF = () => {
+        const element = document.querySelector("main");
+        const options = {
+          margin: 10,
+          filename: "CV_Rifqi_Syahrizal.pdf",
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        };
+        // @ts-ignore
+        html2pdf().from(element).set(options).save();
+      };
+    </script>
   </body>
 </html>
-
-
