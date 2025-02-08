@@ -5,6 +5,7 @@ import ArrowCard from "@components/ArrowCard"
 import StackCard from "@components/StackCard.astro"
 import { SITE, SOCIALS } from "@consts"
 
+
 const posts = (await getCollection("blog"))
   .filter(post => !post.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
@@ -58,6 +59,7 @@ const stack = [
     icon: "vscode-icons:file-type-tailwind", 
   },
 ]
+
 ---
 
 <PageLayout title="Home" description={SITE.DESCRIPTION}>
@@ -72,7 +74,6 @@ const stack = [
         <div class='relative w-full h-full flex flex-col items-start justify-center'>
           <div class='p-5'>
             <p class='animated text-lg md:text-xl lg:text-2xl font-semibold opacity-75'>
-              Hellow, I'm Alba 👋
             </p>
             <p class='animated text-2xl md:text-3xl lg:text-4xl font-bold uppercase text-black dark:text-white'>
               Junior Fullstack Engineer
