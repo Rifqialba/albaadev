@@ -13,6 +13,12 @@ export const WORK: Page = {
   DESCRIPTION: "Places I have worked.",
 }
 
+// Certificate Page
+export const CERTIFICATE: Page = {
+  TITLE: "Certificate",
+  DESCRIPTION: "Certificate I have goted.",
+}
+
 // Blog Page
 export const BLOG: Page = {
   TITLE: "Blog",
@@ -48,6 +54,10 @@ export const LINKS: Links = [
   { 
     TEXT: "Projects", 
     HREF: "/projects", 
+  },
+  { 
+    TEXT: "Certificate", 
+    HREF: "/certificate", 
   },
 ]
 

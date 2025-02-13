@@ -1,19 +1,21 @@
-
 ---
-import { Icon } from '@iconify-icon/solid';
-
+import { Icon } from "@iconify-icon/solid";
 
 type Props = {
-  text: string
-  icon: string
-}
+  text: string;
+  icon: string;
+};
 
-const { text, icon } = Astro.props
+const { text, icon } = Astro.props;
 ---
 
-<div class="w-fit px-3 py-2 group rounded border flex gap-2 items-center border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 hover:dark:bg-neutral-800 blend">
+<div
+  class="w-fit px-3 py-2 group rounded border flex gap-2 items-center border-neutral-200 dark:border-neutral-700 hover:bg-neutral-100 hover:dark:bg-neutral-800 blend"
+>
   <Icon client:load icon={icon} />
-  <span class="text-sm capitalize text-neutral-500 dark:text-neutral-400 group-hover:text-black group-hover:dark:text-white blend">
+  <span
+    class="text-sm capitalize text-neutral-500 dark:text-neutral-400 group-hover:text-black group-hover:dark:text-white blend"
+  >
     {text}
   </span>
-</a>
+</div>

@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import TopLayout from "@layouts/TopLayout.astro";
+import BottomLayout from "@layouts/BottomLayout.astro";
+import { CERTIFICATE } from "@consts";
+
+import CertificateList from "@components/Certificate.astro";
+---
+
+<PageLayout title={CERTIFICATE.TITLE} description={CERTIFICATE.DESCRIPTION}>
+  <TopLayout>
+    <div class="animate page-heading">
+      {CERTIFICATE.TITLE}
+    </div>
+  </TopLayout>
+  <BottomLayout>
+    <CertificateList />
+  </BottomLayout>
+</PageLayout>
