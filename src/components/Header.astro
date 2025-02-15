@@ -14,7 +14,11 @@ import Container from "@components/Container.astro";
           href="/"
           class="flex items-center gap-1 text-current hover:text-black dark:hover:text-white transition-colors duration-300 ease-in-out"
         >
-          <img src="/ra.png" alt="aanjing" width="26" />
+          <video autoplay loop muted playsinline width="50">
+            <source src="/b.webm" type="video/webm" />
+            Your browser does not support the video tag.
+          </video>
+
           <div class="mt-1">
             {SITE.TITLE}
           </div>
