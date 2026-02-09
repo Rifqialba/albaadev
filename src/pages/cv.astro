@@ -7,7 +7,6 @@ import StackCard from "@components/StackCard.astro";
 import { SITE, SOCIALS } from "@consts";
 import BaseHead from "@components/BaseHead.astro";
 import WorkList from "@components/WorkList.astro";
-import { downloadPDF } from "@components/pdf"; // Impor fungsi downloadPDF
 
 const posts = (await getCollection("blog"))
   .filter((post) => !post.data.draft)
@@ -128,8 +127,9 @@ const infos = [
 
       <!-- Tombol Download CV -->
       <div class="absolute top-5 right-5">
-        <button
-          onclick="downloadPDF()"
+        <a
+          href="../../public/assets/CV.pdf"
+          download="CV_Rifqi_Syahrizal_Fadhil_Alba.pdf"
           class="flex items-center gap-2 py-2 px-4 rounded truncate text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend transition-colors duration-300 ease-in-out"
         >
           <svg
@@ -148,7 +148,7 @@ const infos = [
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
           <span>Download CV</span>
-        </button>
+        </a>
       </div>
 
       <!-- Konten CV -->
@@ -159,10 +159,11 @@ const infos = [
               <h1 class="text-2xl">Rifqi Syahrizal Fadhil Alba</h1>
               <p class="text-xl font-bold">Software Engineer</p>
               <p class="text-sm my-2">
-                As a Full-Stack with over 2 years of experience in the tech industry, I specialize in developing web
-                applications and processing data for building machine learning and AI-based models. My expertise in the
-                JavaScript ecosystem and my role in developing innovative platforms reflect my passion for solving
-                complex challenges and driving technological advancements.
+                Full-stack engineer with additional expertise in data management and analysis. Experienced in using
+                Google Cloud Platform (BigQuery, Dataflow, Pub/Sub), Next.js, and TypeScript to build and maintain
+                end-to-end digital platforms, including data pipeline components and analytics dashboards. Strong
+                interest in applying machine learning to content management, personalization, or audience analysis.
+                Dedicated to bridging the gap between software development and actionable data insights.
               </p>
             </div>
             <div class="relative bg-white dark:bg-black">
@@ -227,23 +228,5 @@ const infos = [
         </div>
       </div>
     </main>
-
-    <!-- Tambahkan script untuk memastikan fungsi downloadPDF tersedia di global scope -->
-    <script>
-      // Ekspor fungsi downloadPDF ke global scope
-      // @ts-ignore
-      window.downloadPDF = () => {
-        const element = document.querySelector("main");
-        const options = {
-          margin: 10,
-          filename: "CV_Rifqi_Syahrizal.pdf",
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-        };
-        // @ts-ignore
-        html2pdf().from(element).set(options).save();
-      };
-    </script>
   </body>
 </html>
