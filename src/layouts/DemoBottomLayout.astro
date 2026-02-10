@@ -1,0 +1,174 @@
+---
+// src/layouts/DemoBottomLayout.astro
+import type { CollectionEntry } from "astro:content";
+
+type Props = {
+  project: CollectionEntry<"projects">;
+};
+
+const { project } = Astro.props;
+const { data } = project;
+const { Content } = await project.render();
+---
+
+<div class="space-y-8">
+  <!-- Project Content -->
+  <section>
+    <h2 class="text-2xl font-semibold text-black dark:text-white mb-4">Project Overview</h2>
+    <article class="prose dark:prose-invert max-w-none">
+      <Content />
+    </article>
+  </section>
+
+  <!-- Demo Images Section -->
+  <section>
+    <h2 class="text-2xl font-semibold text-black dark:text-white mb-4">Project Visuals</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="space-y-3">
+        <h3 class="text-lg font-medium text-black dark:text-white">Raw Data Preview</h3>
+        <div
+          class="border rounded-lg overflow-hidden border-black/15 dark:border-white/20 bg-gray-50 dark:bg-gray-900 p-6"
+        >
+          <div class="flex items-center justify-center h-64">
+            <svg class="size-20 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+        <p class="text-sm opacity-75">Example of raw dataset before processing</p>
+      </div>
+
+      <div class="space-y-3">
+        <h3 class="text-lg font-medium text-black dark:text-white">Final Result</h3>
+        <div
+          class="border rounded-lg overflow-hidden border-black/15 dark:border-white/20 bg-gray-50 dark:bg-gray-900 p-6"
+        >
+          <div class="flex items-center justify-center h-64">
+            <svg class="size-20 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+        <p class="text-sm opacity-75">Dashboard/application after development</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Development Process -->
+  <section>
+    <h2 class="text-2xl font-semibold text-black dark:text-white mb-4">Development Process</h2>
+    <div class="space-y-4">
+      <div class="flex gap-4 items-start">
+        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+          <span class="text-blue-800 dark:text-blue-200 font-bold">1</span>
+        </div>
+        <div>
+          <h4 class="font-medium text-black dark:text-white">Data Collection & Cleaning</h4>
+          <p class="text-sm opacity-75 mt-1">
+            Gathering raw data from various sources and performing data cleaning operations
+          </p>
+        </div>
+      </div>
+
+      <div class="flex gap-4 items-start">
+        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+          <span class="text-blue-800 dark:text-blue-200 font-bold">2</span>
+        </div>
+        <div>
+          <h4 class="font-medium text-black dark:text-white">Analysis & Processing</h4>
+          <p class="text-sm opacity-75 mt-1">Applying analytical methods and algorithms to extract insights</p>
+        </div>
+      </div>
+
+      <div class="flex gap-4 items-start">
+        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+          <span class="text-blue-800 dark:text-blue-200 font-bold">3</span>
+        </div>
+        <div>
+          <h4 class="font-medium text-black dark:text-white">Visualization</h4>
+          <p class="text-sm opacity-75 mt-1">Creating interactive dashboards and visual representations</p>
+        </div>
+      </div>
+
+      <div class="flex gap-4 items-start">
+        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+          <span class="text-blue-800 dark:text-blue-200 font-bold">4</span>
+        </div>
+        <div>
+          <h4 class="font-medium text-black dark:text-white">Deployment & Testing</h4>
+          <p class="text-sm opacity-75 mt-1">Launching the solution and conducting user testing</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Navigation -->
+  <section class="pt-8 border-t border-black/10 dark:border-white/10">
+    <div class="flex justify-between">
+      <a
+        href={`/projects/${project.slug}`}
+        class="group flex items-center gap-2 text-black/75 dark:text-white/75 hover:text-black hover:dark:text-white transition-colors"
+      >
+        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Back to Project Details
+      </a>
+
+      <a
+        href="/projects"
+        class="group flex items-center gap-2 text-black/75 dark:text-white/75 hover:text-black hover:dark:text-white transition-colors"
+      >
+        View All Projects
+        <svg class="size-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+      </a>
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Prose styling for content */
+  .prose {
+    color: inherit;
+  }
+
+  .prose p {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  .prose ul {
+    list-style-type: disc;
+    padding-left: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  .prose ol {
+    list-style-type: decimal;
+    padding-left: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+
+  /* Smooth transitions for images */
+  img {
+    transition: transform 0.3s ease;
+  }
+
+  img:hover {
+    transform: scale(1.02);
+  }
+</style>

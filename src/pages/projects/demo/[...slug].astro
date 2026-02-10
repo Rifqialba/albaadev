@@ -1,0 +1,40 @@
+---
+// src/pages/projects/demo/[...slug].astro
+import { getCollection } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import TopLayout from "@layouts/TopLayout.astro";
+import BottomLayout from "@layouts/BottomLayout.astro";
+import DemoArticleTop from "@components/DemoArticleTop.astro";
+import DemoArticleBottom from "@components/DemoArticleBottom.astro";
+import { PROJECTS } from "@consts";
+
+// Generate static paths for all projects
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+// Get the requested project
+const { project } = Astro.props;
+const { data } = project;
+const { title, summary } = data;
+
+// Set page title
+const pageTitle = `${title} - Demo`;
+---
+
+<PageLayout title={pageTitle} description={summary}>
+  <TopLayout>
+    <div class="animate">
+      <DemoArticleTop project={project} />
+    </div>
+  </TopLayout>
+  <BottomLayout>
+    <div class="animate">
+      <DemoArticleBottom project={project} />
+    </div>
+  </BottomLayout>
+</PageLayout>

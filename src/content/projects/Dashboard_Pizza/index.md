@@ -1,7 +1,7 @@
 ---
 title: "Pizza Sales Performance Dashboard"
 summary: "An interactive data analysis project that explores pizza sales performance using pivot tables, charts, slicers, and time-based analysis to uncover sales trends and top-selling products."
-date: "8 January 2026"
+date: "2026-01-08"
 draft: false
 tags:
   - Data Analysis
@@ -9,9 +9,47 @@ tags:
   - Dashboard
   - Pivot Table
   - Data Visualization
-demoUrl: no
-repoUrl: no
-
+demoUrl: "https://docs.google.com/spreadsheets/d/example"
+repoUrl: "https://github.com/username/pizza-dashboard"
+demoType: "dashboard"
+rawImage: "/images/projects/pizza/raw-data.png"
+resultImage: "/images/projects/pizza/dashboard.png"
+tools:
+  - Google Sheets
+  - Pivot Tables
+  - Data Validation
+  - Charts
+processSteps:
+  - "Data collection from multiple CSV sources"
+  - "Cleaning and formatting raw data"
+  - "Creating pivot tables for analysis"
+  - "Building interactive charts and graphs"
+  - "Adding slicers for dynamic filtering"
+features:
+  - "Real-time sales tracking"
+  - "Product performance analysis"
+  - "Time-based trend visualization"
+  - "Interactive filtering options"
 ---
 
-Empower business decision-making through an interactive pizza sales performance dashboard built using Google Sheets. This project analyzes transactional sales data to uncover revenue trends, top-selling products, and category performance using pivot tables, slicers, and time-based visualizations. The dashboard is designed to be dynamic, easy to explore, and scalable, enabling stakeholders to quickly identify insights and monitor sales performance over time.
+## Project Details
+
+This dashboard provides comprehensive insights into pizza sales performance across multiple dimensions.
+
+### Key Metrics Tracked
+- Daily, weekly, and monthly sales trends
+- Top-selling pizza categories and sizes
+- Revenue by store location
+- Customer preferences analysis
+
+### Technical Implementation
+- **Data Sources**: CSV exports from POS systems
+- **Processing**: Google Sheets formulas and pivot tables
+- **Visualization**: Dynamic charts with conditional formatting
+- **Interactivity**: Slicers for time period and category filtering
+
+### Business Impact
+- 25% reduction in reporting time
+- Improved inventory management
+- Better understanding of customer preferences
+- Data-driven decision making

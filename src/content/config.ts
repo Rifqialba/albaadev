@@ -30,6 +30,8 @@ const blog = defineCollection({
   }),
 })
 
+// src/content/config.ts - Update projects schema
+// src/content/config.ts - Update projects schema
 const projects = defineCollection({
   type: "content",
   schema: z.object({
@@ -40,8 +42,43 @@ const projects = defineCollection({
     draft: z.boolean().optional(),
     demoUrl: z.string().optional(),
     repoUrl: z.string().optional(),
+    
+    // Tambahkan field baru untuk demo page
+    demoType: z.enum(["dashboard", "website", "ml", "program", "other"]).optional(),
+    
+    // Untuk semua tipe proyek
+    resultImage: z.string().optional(),
+    videoUrl: z.string().optional(),
+    tools: z.array(z.string()).optional(),
+    processSteps: z.array(z.string()).optional(),
+    features: z.array(z.string()).optional(),
+    
+    // Khusus dashboard
+    rawImage: z.string().optional(),
+    
+    // Khusus ML
+    modelMetrics: z.array(z.object({
+      name: z.string(),
+      value: z.string(),
+      description: z.string().optional(),
+    })).optional(),
+    
+    datasetInfo: z.object({
+      name: z.string().optional(),
+      size: z.string().optional(),
+      source: z.string().optional(),
+      description: z.string().optional(),
+    }).optional(),
+    
+    // Khusus website
+    techStack: z.array(z.string()).optional(),
+    deployment: z.object({
+      platform: z.string().optional(),
+      url: z.string().optional(),
+      status: z.string().optional(),
+    }).optional(),
   }),
-})
+});
 
 const legal = defineCollection({
   type: "content",

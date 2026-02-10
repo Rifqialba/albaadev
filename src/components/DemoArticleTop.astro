@@ -1,27 +1,20 @@
 ---
+// src/components/DemoArticleTop.astro
 import type { CollectionEntry } from "astro:content";
 import { formatDate } from "@lib/utils";
 
 type Props = {
-  entry: CollectionEntry<"projects"> | CollectionEntry<"blog">;
+  project: CollectionEntry<"projects">;
 };
 
-const { entry } = Astro.props;
-const { collection, data, body } = entry;
-const { title, summary, date } = data;
-
-const demoUrl = collection === "projects" ? data.demoUrl : null;
-const repoUrl = collection === "projects" ? data.repoUrl : null;
-
-// Cek apakah ini adalah proyek dan apakah memiliki field untuk demo page
-const isProject = collection === "projects";
-const hasDemoPage =
-  isProject && (data.demoType || data.rawImage || data.resultImage || data.processSteps || data.tools || data.features);
+const { project } = Astro.props;
+const { data } = project;
+const { title, summary, date, demoUrl, repoUrl } = data;
 ---
 
 <div>
   <a
-    href={`/${collection}`}
+    href={`/projects/${project.slug}`}
     class="group w-fit p-1.5 gap-1.5 text-sm flex items-center border rounded hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 transition-colors duration-300 ease-in-out"
   >
     <svg
@@ -47,9 +40,10 @@ const hasDemoPage =
         class="translate-x-1 group-hover:translate-x-0 transition-all duration-300 ease-in-out"></polyline>
     </svg>
     <div class="w-full group-hover:text-black group-hover:dark:text-white transition-colors duration-300 ease-in-out">
-      Back to {collection}
+      Back to Project
     </div>
   </a>
+
   <div class="flex flex-wrap text-sm uppercase mt-12 gap-3 opacity-75">
     <div class="flex items-center gap-2">
       <svg class="size-5 stroke-current">
@@ -57,54 +51,23 @@ const hasDemoPage =
       </svg>
       {formatDate(date)}
     </div>
-    {/* Tambahkan badge untuk proyek jika ada demo page */}
-    {
-      hasDemoPage && (
-        <div class="flex items-center gap-2">
-          <svg class="size-5 fill-current">
-            <use href="/ui.svg#eye" />
-          </svg>
-          Detailed Demo Available
-        </div>
-      )
-    }
+    <div class="flex items-center gap-2">
+      <svg class="size-5 fill-current">
+        <use href="/ui.svg#eye"></use>
+      </svg>
+      Interactive Demo
+    </div>
   </div>
+
   <h1 class="text-3xl font-semibold text-black dark:text-white mt-2">
-    {title}
+    {title} - Demo
   </h1>
+
   <div class="mt-1">
     {summary}
   </div>
 
-  {/* Buttons section dengan tombol View Detailed Demo */}
   <div class="mt-4 flex flex-wrap gap-2">
-    {/* Tombol View Detailed Demo untuk proyek yang memiliki demo page */}
-    {
-      hasDemoPage && (
-        <a
-          href={`/projects/demo/${entry.slug}`}
-          class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-900/20 transition-colors"
-        >
-          <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 10v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>View Detailed Demo</span>
-        </a>
-      )
-    }
-
-    {/* Tombol See Demo (eksternal) */}
     {
       demoUrl && demoUrl !== "no" && demoUrl !== "/projects/demo/" && (
         <a
@@ -115,12 +78,11 @@ const hasDemoPage =
           <svg class="size-4">
             <use href="/ui.svg#globe" class="fill-current group-hover:fill-black group-hover:dark:fill-white blend" />
           </svg>
-          <span class="text-current group-hover:text-black group-hover:dark:text-white blend">See Live Demo</span>
+          <span class="text-current group-hover:text-black group-hover:dark:text-white blend">Live Demo</span>
         </a>
       )
     }
 
-    {/* Tombol See Repository */}
     {
       repoUrl && repoUrl !== "no" && (
         <a
@@ -131,17 +93,9 @@ const hasDemoPage =
           <svg class="size-4">
             <use href="/ui.svg#link" class="fill-current group-hover:fill-black group-hover:dark:fill-white blend" />
           </svg>
-          <span class="text-current group-hover:text-black group-hover:dark:text-white blend">See Repository</span>
+          <span class="text-current group-hover:text-black group-hover:dark:text-white blend">Repository</span>
         </a>
       )
     }
   </div>
 </div>
-
-<style>
-  /* Animasi untuk tombol detailed demo */
-  .group:hover svg {
-    transform: translateX(2px);
-    transition: transform 0.2s ease;
-  }
-</style>
