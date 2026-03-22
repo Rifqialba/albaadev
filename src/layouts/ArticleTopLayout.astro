@@ -12,11 +12,48 @@ const { title, summary, date } = data;
 
 const demoUrl = collection === "projects" ? data.demoUrl : null;
 const repoUrl = collection === "projects" ? data.repoUrl : null;
+const demoType = collection === "projects" ? data.demoType : null;
 
-// Cek apakah ini adalah proyek dan apakah memiliki field untuk demo page
-const isProject = collection === "projects";
-const hasDemoPage =
-  isProject && (data.demoType || data.rawImage || data.resultImage || data.processSteps || data.tools || data.features);
+// Helper untuk menentukan apakah demo bersifat private
+// Private jika: tidak ada demoUrl, atau demoUrl kosong, atau demoUrl bernilai "no" atau "private"
+const isDemoPrivate = !demoUrl || demoUrl === "" || demoUrl === "no" || demoUrl === "private";
+
+// Helper untuk mendapatkan link demo (jika ada)
+const demoLink = !isDemoPrivate ? demoUrl : null;
+
+// Helper untuk menentukan badge warna berdasarkan tipe project
+const getTypeBadgeClass = (type: string) => {
+  switch (type) {
+    case "dashboard":
+      return "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200";
+    case "website":
+      return "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200";
+    case "ml":
+      return "bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200";
+    case "program":
+      return "bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200";
+    default:
+      return "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200";
+  }
+};
+
+const getTypeLabel = (type: string) => {
+  switch (type) {
+    case "dashboard":
+      return "📊 Dashboard Project";
+    case "website":
+      return "🌐 Website Project";
+    case "ml":
+      return "🤖 Machine Learning Project";
+    case "program":
+      return "💻 Program Project";
+    default:
+      return "📁 General Project";
+  }
+};
+
+// Cek apakah repository ada dan valid
+const hasRepo = repoUrl && repoUrl !== "no" && repoUrl !== "";
 ---
 
 <div>
@@ -50,25 +87,23 @@ const hasDemoPage =
       Back to {collection}
     </div>
   </a>
-  <div class="flex flex-wrap text-sm uppercase mt-12 gap-3 opacity-75">
-    <div class="flex items-center gap-2">
+  
+  <div class="flex flex-wrap items-center gap-3 mt-12">
+    <div class="flex items-center gap-2 text-sm uppercase opacity-75">
       <svg class="size-5 stroke-current">
         <use href="/ui.svg#calendar"></use>
       </svg>
       {formatDate(date)}
     </div>
-    {/* Tambahkan badge untuk proyek jika ada demo page */}
-    {
-      hasDemoPage && (
-        <div class="flex items-center gap-2">
-          <svg class="size-5 fill-current">
-            <use href="/ui.svg#eye" />
-          </svg>
-          Detailed Demo Available
-        </div>
-      )
-    }
+    
+    <!-- Type Badge diletakkan disamping date -->
+    {collection === "projects" && demoType && (
+      <span class={`inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium ${getTypeBadgeClass(demoType)}`}>
+        {getTypeLabel(demoType)}
+      </span>
+    )}
   </div>
+  
   <h1 class="text-3xl font-semibold text-black dark:text-white mt-2">
     {title}
   </h1>
@@ -76,72 +111,64 @@ const hasDemoPage =
     {summary}
   </div>
 
-  {/* Buttons section dengan tombol View Detailed Demo */}
+  {/* Buttons section */}
   <div class="mt-4 flex flex-wrap gap-2">
-    {/* Tombol View Detailed Demo untuk proyek yang memiliki demo page */}
-    {
-      hasDemoPage && (
-        <a
-          href={`/projects/demo/${entry.slug}`}
-          class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-900/20 transition-colors"
-        >
-          <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 10v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-            />
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>View Detailed Demo</span>
-        </a>
-      )
-    }
+    {/* Tombol See Live Demo - Selalu muncul, tapi beda link */}
+    {isDemoPrivate ? (
+      // Jika private, arahkan ke halaman private demo
+      <a
+        href={`/projects/demo/private/${entry.slug}`}
+        class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-yellow-600 text-yellow-600 hover:bg-yellow-50 dark:border-yellow-500 dark:text-yellow-500 dark:hover:bg-yellow-900/20 transition-colors"
+      >
+        <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 15v2m-6-4h12a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6a2 2 0 012-2zm10-4V8a4 4 0 00-8 0v3h8z"
+          />
+        </svg>
+        <span>Live Demo (Private)</span>
+      </a>
+    ) : (
+      // Jika public, arahkan ke URL demo
+      <a
+        href={demoLink}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-green-600 text-green-600 hover:bg-green-50 dark:border-green-500 dark:text-green-500 dark:hover:bg-green-900/20 transition-colors"
+      >
+        <svg class="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M14.752 11.168l-3.197-2.132A1 1 0 0010 10v4a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+          />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+          />
+        </svg>
+        <span>See Live Demo</span>
+      </a>
+    )}
 
-    {/* Tombol See Demo (eksternal) */}
-    {
-      demoUrl && demoUrl !== "no" && demoUrl !== "/projects/demo/" && (
-        <a
-          href={demoUrl}
-          target="_blank"
-          class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend"
-        >
-          <svg class="size-4">
-            <use href="/ui.svg#globe" class="fill-current group-hover:fill-black group-hover:dark:fill-white blend" />
-          </svg>
-          <span class="text-current group-hover:text-black group-hover:dark:text-white blend">See Live Demo</span>
-        </a>
-      )
-    }
-
-    {/* Tombol See Repository */}
-    {
-      repoUrl && repoUrl !== "no" && (
-        <a
-          href={repoUrl}
-          target="_blank"
-          class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend"
-        >
-          <svg class="size-4">
-            <use href="/ui.svg#link" class="fill-current group-hover:fill-black group-hover:dark:fill-white blend" />
-          </svg>
-          <span class="text-current group-hover:text-black group-hover:dark:text-white blend">See Repository</span>
-        </a>
-      )
-    }
+    {/* Tombol See Repository - Hanya muncul jika ada repo */}
+    {hasRepo && (
+      <a
+        href={repoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="group flex gap-2 items-center px-3 py-1.5 truncate rounded text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend transition-colors"
+      >
+        <svg class="size-4 fill-current" viewBox="0 0 24 24">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.108-.775.418-1.305.762-1.604-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+        <span class="text-current group-hover:text-black group-hover:dark:text-white blend">See Repository</span>
+      </a>
+    )}
   </div>
 </div>
-
-<style>
-  /* Animasi untuk tombol detailed demo */
-  .group:hover svg {
-    transform: translateX(2px);
-    transition: transform 0.2s ease;
-  }
-</style>

@@ -4,9 +4,7 @@ summary: "An news portal built with a headless CMS for seamless content manageme
 date: "December 31 2024"
 draft: false
 tags:
-- CMS System
-- Web Design
-- User Experience
+  - Web Development
 demoUrl: no
 repoUrl: no
 ---

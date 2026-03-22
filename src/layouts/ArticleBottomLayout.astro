@@ -1,5 +1,7 @@
 ---
+// src/layouts/ArticleBottomLayout.astro
 import { type CollectionEntry, getCollection } from "astro:content"
+import ProjectDetailContent from "@components/ProjectDetailContent.astro"
 
 type Props = {
   entry: CollectionEntry<"blog"> | CollectionEntry<"projects">
@@ -19,31 +21,38 @@ const next = items[(index + 1) % items.length]
 
 <div>
   <article>
-    <Content/>
+    {collection === "projects" ? (
+      // Untuk projects, gunakan komponen lengkap dengan semua detail
+      <ProjectDetailContent project={entry as CollectionEntry<"projects">} />
+    ) : (
+      // Untuk blog, tampilkan konten biasa
+      <Content />
+    )}
   </article>
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-    <a href={`/${prev.collection}/${prev.slug}`} class="group p-4 gap-3 flex items-center border rounded-lg hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 blend">
-      <div class="order-2 w-full h-full group-hover:text-black group-hover:dark:text-white blend">
-        <div class="flex flex-wrap gap-2">
-          <div class="text-sm uppercase">
-            Prev
-          </div>
-        </div>
-        <div class="font-semibold mt-3 text-black dark:text-white">
-          {prev.data.title}
-        </div>
-      </div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="order-1 stroke-current group-hover:stroke-black group-hover:dark:stroke-white rotate-180">
+  
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-12 pt-8 border-t border-black/10 dark:border-white/10">
+    <a href={`/${prev.collection}/${prev.slug}`} class="group p-4 gap-3 flex items-center border rounded-lg hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 blend transition-all duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="stroke-current group-hover:stroke-black group-hover:dark:stroke-white rotate-180">
         <line x1="5" y1="12" x2="19" y2="12" class="scale-x-0 group-hover:scale-x-100 translate-x-4 group-hover:translate-x-1 transition-all duration-300 ease-in-out" />
         <polyline points="12 5 19 12 12 19" class="translate-x-0 group-hover:translate-x-1 transition-all duration-300 ease-in-out" />
       </svg>
-    </a>
-    <a href={`/${next.collection}/${next.slug}`} class="group p-4 gap-3 flex items-center border rounded-lg hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 transition-colors duration-300 ease-in-out">
-      <div class="w-full h-full text-right group-hover:text-black group-hover:dark:text-white blend">
-        <div class="text-sm uppercase">
-          Next
+      <div class="w-full group-hover:text-black group-hover:dark:text-white blend">
+        <div class="flex flex-wrap gap-2">
+          <div class="text-sm uppercase">
+            Previous {collection === "projects" ? "Project" : "Post"}
+          </div>
         </div>
-        <div class="font-semibold mt-3 text-black dark:text-white">
+        <div class="font-semibold mt-1 text-black dark:text-white line-clamp-1">
+          {prev.data.title}
+        </div>
+      </div>
+    </a>
+    <a href={`/${next.collection}/${next.slug}`} class="group p-4 gap-3 flex items-center border rounded-lg hover:bg-black/5 hover:dark:bg-white/10 border-black/15 dark:border-white/20 transition-all duration-300">
+      <div class="w-full text-right group-hover:text-black group-hover:dark:text-white blend">
+        <div class="text-sm uppercase">
+          Next {collection === "projects" ? "Project" : "Post"}
+        </div>
+        <div class="font-semibold mt-1 text-black dark:text-white line-clamp-1">
           {next.data.title}
         </div>
       </div>
@@ -54,3 +63,12 @@ const next = items[(index + 1) % items.length]
     </a>
   </div>
 </div>
+
+<style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

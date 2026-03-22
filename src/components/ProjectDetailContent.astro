@@ -1,0 +1,528 @@
+---
+// src/components/ProjectDetailContent.astro
+import type { CollectionEntry } from "astro:content";
+
+type Props = {
+  project: CollectionEntry<"projects">;
+};
+
+const { project } = Astro.props;
+const { data } = project;
+const {
+  demoType,
+  rawImage,
+  resultImage,
+  videoUrl,
+  tools = [],
+  processSteps = [],
+  features = [],
+  modelMetrics = [],
+  datasetInfo,
+  techStack = [],
+  deployment,
+} = data;
+
+// Render konten untuk mendapatkan HTML dan raw markdown
+const { Content, headings } = await project.render();
+
+
+
+// Cek apakah ada heading "Challenges and Solutions" dan "Conclusion"
+const hasChallengesHeading = headings.some(h => h.text === "Challenges and Solutions" || h.text === "Challenges & Solutions");
+const hasConclusionHeading = headings.some(h => h.text === "Conclusion");
+
+
+
+// Helper untuk menentukan badge warna berdasarkan tipe project
+const getTypeBadgeClass = (type: string) => {
+  switch (type) {
+    case "dashboard":
+      return "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200";
+    case "website":
+      return "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200";
+    case "ml":
+      return "bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200";
+    case "program":
+      return "bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200";
+    default:
+      return "bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200";
+  }
+};
+
+const getTypeLabel = (type: string) => {
+  switch (type) {
+    case "dashboard":
+      return "📊 Dashboard Project";
+    case "website":
+      return "🌐 Website Project";
+    case "ml":
+      return "🤖 Machine Learning Project";
+    case "program":
+      return "💻 Program Project";
+    default:
+      return "📁 General Project";
+  }
+};
+
+// Fungsi untuk mendeteksi tipe video (YouTube atau TikTok)
+function getVideoType(url: string): "youtube" | "tiktok" | "other" {
+  if (url.includes("youtube.com") || url.includes("youtu.be")) {
+    return "youtube";
+  }
+  if (url.includes("tiktok.com") || url.includes("vt.tiktok.com")) {
+    return "tiktok";
+  }
+  return "other";
+}
+
+// Fungsi untuk mendapatkan embed URL YouTube
+function getYouTubeEmbedUrl(url: string): string {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  const videoId = (match && match[2].length === 11) ? match[2] : null;
+  return videoId ? `https://www.youtube.com/embed/${videoId}` : url;
+}
+
+// Fungsi untuk extract TikTok video ID dari URL
+function getTikTokVideoId(url: string): string | null {
+  // Handle various TikTok URL formats
+  const patterns = [
+    /tiktok\.com\/@[\w.-]+\/video\/(\d+)/,
+    /tiktok\.com\/t\/([\w-]+)/,
+    /vt\.tiktok\.com\/([\w-]+)/
+  ];
+  
+  for (const pattern of patterns) {
+    const match = url.match(pattern);
+    if (match) return match[1];
+  }
+  return null;
+}
+---
+
+<div class="space-y-12">
+  <!-- Original Project Content -->
+  <article class="prose dark:prose-invert max-w-none">
+    <Content />
+  </article>
+
+  <!-- Project Visuals Section -->
+  {(rawImage || resultImage || videoUrl) && (
+    <section>
+      <h2 class="text-2xl font-semibold text-black dark:text-white mb-6 flex items-center gap-2">
+        <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        Project Visuals
+      </h2>
+
+      <!-- Video Demo dengan support YouTube dan TikTok -->
+      {videoUrl && (
+        <div class="mb-8">
+          <h3 class="text-lg font-medium text-black dark:text-white mb-3">Video Demonstration</h3>
+          <div class="rounded-lg overflow-hidden bg-black/5 dark:bg-white/10 shadow-lg">
+            {(() => {
+              const videoType = getVideoType(videoUrl);
+              if (videoType === "youtube") {
+                return (
+                  <div class="aspect-video">
+                    <iframe
+                      src={getYouTubeEmbedUrl(videoUrl)}
+                      class="w-full h-full border-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowfullscreen
+                      loading="lazy"
+                    />
+                  </div>
+                );
+              } else if (videoType === "tiktok") {
+                const tiktokId = getTikTokVideoId(videoUrl);
+                return (
+                  <div class="flex justify-center p-4">
+                    {tiktokId ? (
+                      <blockquote 
+                        class="tiktok-embed" 
+                        cite={videoUrl}
+                        data-video-id={tiktokId}
+                        style="max-width:605px; min-width:325px;"
+                      >
+                        <section>
+                          <a target="_blank" href={videoUrl}>View on TikTok</a>
+                        </section>
+                      </blockquote>
+                    ) : (
+                      <a 
+                        href={videoUrl} 
+                        target="_blank" 
+                        class="text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        Watch on TikTok
+                      </a>
+                    )}
+                  </div>
+                );
+              } else {
+                return (
+                  <div class="aspect-video flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+                    <a 
+                      href={videoUrl} 
+                      target="_blank" 
+                      class="text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      Watch Video Demo
+                    </a>
+                  </div>
+                );
+              }
+            })()}
+          </div>
+        </div>
+      )}
+
+      <!-- Image Display berdasarkan tipe project -->
+      {(rawImage || resultImage) && (
+        <div class="space-y-6">
+          {demoType === "dashboard" && rawImage && resultImage && (
+            // Dashboard: menampilkan perbandingan raw vs result
+            <div>
+              <h3 class="text-lg font-medium text-black dark:text-white mb-4">Data Transformation Process</h3>
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="flex flex-col">
+                  <div class="border rounded-lg overflow-hidden border-black/15 dark:border-white/20 bg-gray-50 dark:bg-gray-900 p-4 flex items-center justify-center min-h-[320px]">
+                    <img
+                      src={rawImage}
+                      alt="Raw Data"
+                      class="w-full h-auto max-h-[280px] object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                  <p class="text-sm text-center opacity-75 mt-2">Raw Data</p>
+                </div>
+                <div class="flex flex-col">
+                  <div class="border rounded-lg overflow-hidden border-black/15 dark:border-white/20 bg-gray-50 dark:bg-gray-900 p-4 flex items-center justify-center min-h-[320px]">
+                    <img
+                      src={resultImage}
+                      alt="Final Result"
+                      class="w-full h-auto max-h-[280px] object-contain"
+                      loading="lazy"
+                    />
+                  </div>
+                  <p class="text-sm text-center opacity-75 mt-2">Final Dashboard</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {(demoType === "website" || demoType === "program" || demoType === "ml") && resultImage && (
+            // Website/Program/ML: menampilkan screenshot utama
+            <div>
+              <h3 class="text-lg font-medium text-black dark:text-white mb-4">
+                {demoType === "website" ? "Website Preview" : demoType === "ml" ? "Model Visualization" : "Program Interface"}
+              </h3>
+              <div class="border rounded-lg overflow-hidden border-black/15 dark:border-white/20 bg-gray-50 dark:bg-gray-900 p-6 flex items-center justify-center min-h-[400px] shadow-lg">
+                <img
+                  src={resultImage}
+                  alt="Project Screenshot"
+                  class="w-full h-auto max-h-[350px] object-contain"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          )}
+
+          {!demoType && resultImage && (
+            // General project: menampilkan gambar hasil
+            <div>
+              <div class="border rounded-lg overflow-hidden border-black/15 dark:border-white/20 bg-gray-50 dark:bg-gray-900 p-6 flex items-center justify-center min-h-[400px]">
+                <img
+                  src={resultImage}
+                  alt="Project Result"
+                  class="w-full h-auto max-h-[350px] object-contain"
+                  loading="lazy"
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </section>
+  )}
+
+  <!-- Tools & Technologies -->
+  {(tools.length > 0 || techStack?.length > 0) && (
+    <section>
+      <h2 class="text-2xl font-semibold text-black dark:text-white mb-4 flex items-center gap-2">
+        <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        Tools & Technologies
+      </h2>
+      <div class="flex flex-wrap gap-2">
+        {[...tools, ...(techStack || [])].map((tool, index) => (
+          <span class="px-3 py-1.5 rounded text-sm border border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/10 hover:bg-black/10 hover:dark:bg-white/20 transition-colors">
+            {tool}
+          </span>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Model Metrics (khusus ML) -->
+  {demoType === "ml" && modelMetrics && modelMetrics.length > 0 && (
+    <section>
+      <h2 class="text-2xl font-semibold text-black dark:text-white mb-4 flex items-center gap-2">
+        <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        Model Performance Metrics
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {modelMetrics.map((metric: any) => (
+          <div class="border rounded-lg p-4 border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/5">
+            <div class="text-sm font-medium text-black/75 dark:text-white/75">{metric.name}</div>
+            <div class="text-2xl font-bold mt-1">{metric.value}</div>
+            {metric.description && (
+              <div class="text-xs mt-2 opacity-75">{metric.description}</div>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Dataset Info (khusus ML) -->
+  {demoType === "ml" && datasetInfo && (datasetInfo.name || datasetInfo.size || datasetInfo.source) && (
+    <section>
+      <h2 class="text-2xl font-semibold text-black dark:text-white mb-4">Dataset Information</h2>
+      <div class="border rounded-lg p-4 border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/5 space-y-2">
+        {datasetInfo.name && (
+          <div><strong>Name:</strong> {datasetInfo.name}</div>
+        )}
+        {datasetInfo.size && (
+          <div><strong>Size:</strong> {datasetInfo.size}</div>
+        )}
+        {datasetInfo.source && (
+          <div><strong>Source:</strong> {datasetInfo.source}</div>
+        )}
+        {datasetInfo.description && (
+          <div><strong>Description:</strong> {datasetInfo.description}</div>
+        )}
+      </div>
+    </section>
+  )}
+
+  <!-- Deployment Info (khusus website) -->
+  {demoType === "website" && deployment && (deployment.platform || deployment.url) && (
+    <section>
+      <h2 class="text-2xl font-semibold text-black dark:text-white mb-4">Deployment</h2>
+      <div class="border rounded-lg p-4 border-black/15 dark:border-white/20 bg-black/5 dark:bg-white/5 space-y-2">
+        {deployment.platform && (
+          <div><strong>Platform:</strong> {deployment.platform}</div>
+        )}
+        {deployment.url && (
+          <div><strong>URL:</strong> <a href={deployment.url} target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">{deployment.url}</a></div>
+        )}
+        {deployment.status && (
+          <div><strong>Status:</strong> {deployment.status}</div>
+        )}
+      </div>
+    </section>
+  )}
+
+  <!-- Development Process -->
+  {processSteps.length > 0 && (
+    <section>
+      <h2 class="text-2xl font-semibold text-black dark:text-white mb-4 flex items-center gap-2">
+        <svg class="size-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+        </svg>
+        Development Process
+      </h2>
+      <div class="space-y-4">
+        {processSteps.map((step: any, index: any) => (
+          <div class="flex gap-3 group">
+            <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-green-500 flex items-center justify-center text-sm font-semibold group-hover:bg-green-200 dark:group-hover:bg-green-800 transition-colors">
+              {index + 1}
+            </div>
+            <div class="pt-1 group-hover:text-black/90 dark:group-hover:text-white/90 transition-colors">
+              {step}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Key Features - Grid 2 kolom dengan checkmark -->
+  {features.length > 0 && (
+    <section>
+      <h2 class="text-2xl font-semibold text-black dark:text-white mb-4">
+        Key Features
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {features.map((feature: any, index: any) => (
+          <div class="flex items-start gap-2 p-3 rounded-lg border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
+            <span class="text-green-600 dark:text-green-400 text-lg flex-shrink-0">✓</span>
+            <span class="text-black/90 dark:text-white/90">{feature}</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+</div>
+
+<script>
+  // Script untuk load TikTok embed setelah halaman dimuat
+  if (typeof window !== 'undefined') {
+    // Tambahkan type declaration untuk window
+    interface CustomWindow extends Window {
+      tiktokEmbedLoaded?: boolean;
+    }
+    
+    const customWindow = window as CustomWindow;
+    
+    const loadTikTokEmbed = () => {
+      const tiktokEmbeds = document.querySelectorAll('.tiktok-embed');
+      if (tiktokEmbeds.length > 0 && !customWindow.tiktokEmbedLoaded) {
+        const script = document.createElement('script');
+        script.src = 'https://www.tiktok.com/embed.js';
+        script.async = true;
+        script.onload = () => {
+          customWindow.tiktokEmbedLoaded = true;
+        };
+        document.body.appendChild(script);
+      }
+    };
+    
+    // Load when page is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadTikTokEmbed);
+    } else {
+      loadTikTokEmbed();
+    }
+  }
+</script>
+
+<style>
+  /* Prose styling for content */
+  .prose {
+    color: inherit;
+    max-width: none;
+  }
+
+  .prose > :first-child {
+    margin-top: 0;
+  }
+
+  .prose > :last-child {
+    margin-bottom: 0;
+  }
+
+  .prose p {
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+    line-height: 1.75;
+    color: inherit;
+  }
+
+  .prose ul {
+    list-style-type: disc;
+    padding-left: 1.625em;
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+  }
+
+  .prose ol {
+    list-style-type: decimal;
+    padding-left: 1.625em;
+    margin-top: 1.25em;
+    margin-bottom: 1.25em;
+  }
+
+  .prose li {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    color: inherit;
+  }
+
+  .prose h2 {
+    font-size: 1.5em;
+    font-weight: 600;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    color: inherit;
+    line-height: 1.375;
+  }
+
+  .prose h3 {
+    font-size: 1.25em;
+    font-weight: 600;
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    color: inherit;
+    line-height: 1.375;
+  }
+
+  .prose a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    text-decoration-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .dark .prose a {
+    text-decoration-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .prose a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* Image hover effects */
+  img {
+    transition: all 0.3s ease;
+  }
+
+  .border:hover img {
+    transform: scale(1.02);
+  }
+
+  /* TikTok embed styling */
+  .tiktok-embed {
+    margin: 0 auto;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .prose h2 {
+      font-size: 1.375em;
+    }
+
+    .prose h3 {
+      font-size: 1.125em;
+    }
+
+    .space-y-12 > * + * {
+      margin-top: 2rem;
+    }
+
+    /* Adjust image heights for mobile */
+    .min-h-\[320px\] {
+      min-height: 280px !important;
+    }
+
+    .min-h-\[400px\] {
+      min-height: 320px !important;
+    }
+
+    .max-h-\[280px\] {
+      max-height: 240px !important;
+    }
+
+    .max-h-\[350px\] {
+      max-height: 280px !important;
+    }
+  }
+</style>

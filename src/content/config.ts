@@ -1,3 +1,4 @@
+// src/content/config.ts
 import { defineCollection, z } from "astro:content"
 
 const work = defineCollection({
@@ -9,6 +10,7 @@ const work = defineCollection({
     dateEnd: z.union([z.coerce.date(), z.string()]),
   }),
 })
+
 const certificate = defineCollection({
   type: "content",
   schema: z.object({
@@ -30,8 +32,6 @@ const blog = defineCollection({
   }),
 })
 
-// src/content/config.ts - Update projects schema
-// src/content/config.ts - Update projects schema
 const projects = defineCollection({
   type: "content",
   schema: z.object({
@@ -77,8 +77,16 @@ const projects = defineCollection({
       url: z.string().optional(),
       status: z.string().optional(),
     }).optional(),
+    
+    // Field opsional untuk Challenges & Solutions dan Conclusion
+    // (bisa juga tidak digunakan karena kita extract dari konten MD)
+    challenges: z.array(z.object({
+      challenge: z.string(),
+      solution: z.string()
+    })).optional(),
+    conclusion: z.string().optional(),
   }),
-});
+})
 
 const legal = defineCollection({
   type: "content",

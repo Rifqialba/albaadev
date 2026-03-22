@@ -4,13 +4,9 @@ summary: "An interactive data analysis project that explores pizza sales perform
 date: "2026-01-08"
 draft: false
 tags:
-  - Data Analysis
-  - Google Sheets
-  - Dashboard
-  - Pivot Table
   - Data Visualization
-demoUrl: "https://docs.google.com/spreadsheets/d/example"
-repoUrl: "https://github.com/username/pizza-dashboard"
+demoUrl: "https://docs.google.com/spreadsheets/d/1va5HsWEth0ur3g6uaVvbO3Ak_AjkJtchIQRvkGzyPJg"
+repoUrl: "https://github.com/Rifqialba/dashboarddata1"
 demoType: "dashboard"
 rawImage: "/images/projects/pizza/raw-data.png"
 resultImage: "/images/projects/pizza/dashboard.png"
@@ -37,18 +33,21 @@ features:
 This dashboard provides comprehensive insights into pizza sales performance across multiple dimensions.
 
 ### Key Metrics Tracked
+
 - Daily, weekly, and monthly sales trends
 - Top-selling pizza categories and sizes
 - Revenue by store location
 - Customer preferences analysis
 
 ### Technical Implementation
+
 - **Data Sources**: CSV exports from POS systems
 - **Processing**: Google Sheets formulas and pivot tables
 - **Visualization**: Dynamic charts with conditional formatting
 - **Interactivity**: Slicers for time period and category filtering
 
 ### Business Impact
+
 - 25% reduction in reporting time
 - Improved inventory management
 - Better understanding of customer preferences
