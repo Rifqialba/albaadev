@@ -7,73 +7,12 @@
     "LinkedIn": "https://www.linkedin.com/in/rifqialba",
     "portfolio": "https://albaporto.vercel.app/"
   },
-  "skills": [
-    {
-      "skill": "Software Development",
-      "proficiency": "Expert"
-    },
-    {
-      "skill": "AWS",
-      "proficiency": "Advanced"
-    },
-    {
-      "skill": "GCP",
-      "proficiency": "Advanced"
-    },
-    {
-      "skill": "PostgreSQL",
-      "proficiency": "Advanced"
-    },
-    {
-      "skill": "Docker",
-      "proficiency": "Advanced"
-    },
-    {
-      "skill": "TypeScript",
-      "proficiency": "Advanced"
-    },
-    {
-      "skill": "React",
-      "proficiency": "Advanced"
-    },
-    {
-      "skill": "Python",
-      "proficiency": "Advanced"
-    }
-  ],
-  "languages": [
-    {
-      "language": "English",
-      "proficiency": "Full Professional"
-    },
-    {
-      "language": "Italian",
-      "proficiency": "Full Professional"
-    }
-  ],
-  "certifications": [
-    "Ethical Hacking with JavaScript",
-    "React: Managing Complex Interactions",
-    "Docker on AWS",
-    "Migrating from REST to GraphQL",
-    "Advanced Node.js"
-  ],
-  "honorsAwards": [
-    "Google Developer Challenge Scholarship 2017- Front-end"
-  ],
   "experience": [
     {
       "company": "Winnicode Garuda",
       "role": "Juniar Fullstack Engineer (Internship)",
       "duration": "September 2024 - December 2024",
       "description": "Designed a tenant's visual website editor and optimized platform functionality for a News Portal application with handless CMS."
-    }
-  ],
-  "education": [
-    {
-      "institution": "Udacity",
-      "degree": "Nano Degree Front-End Web Developer",
-      "years": "2017 - 2018"
     }
   ]
 }

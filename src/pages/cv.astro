@@ -1,22 +1,11 @@
 ---
 import "@styles/global.css";
-import { getCollection } from "astro:content";
-import PageLayout from "@layouts/PageLayout.astro";
-import ArrowCard from "@components/ArrowCard";
-import StackCard from "@components/StackCard.astro";
+
 import { SITE, SOCIALS } from "@consts";
 import BaseHead from "@components/BaseHead.astro";
 import WorkList from "@components/WorkList.astro";
 
-const posts = (await getCollection("blog"))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3);
 
-const projects = (await getCollection("projects"))
-  .filter((project) => !project.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3);
 
 const stack = [
   {
@@ -128,7 +117,7 @@ const infos = [
       <!-- Tombol Download CV -->
       <div class="absolute top-5 right-5">
         <a
-          href="../../public/assets/CV.pdf"
+          href="/assets/CV.pdf"
           download="CV_Rifqi_Syahrizal_Fadhil_Alba.pdf"
           class="flex items-center gap-2 py-2 px-4 rounded truncate text-xs md:text-sm lg:text-base border border-black/25 dark:border-white/25 hover:bg-black/5 hover:dark:bg-white/15 blend transition-colors duration-300 ease-in-out"
         >
