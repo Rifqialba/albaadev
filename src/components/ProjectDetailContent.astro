@@ -25,14 +25,6 @@ const {
 // Render konten untuk mendapatkan HTML dan raw markdown
 const { Content, headings } = await project.render();
 
-
-
-// Cek apakah ada heading "Challenges and Solutions" dan "Conclusion"
-const hasChallengesHeading = headings.some(h => h.text === "Challenges and Solutions" || h.text === "Challenges & Solutions");
-const hasConclusionHeading = headings.some(h => h.text === "Conclusion");
-
-
-
 // Helper untuk menentukan badge warna berdasarkan tipe project
 const getTypeBadgeClass = (type: string) => {
   switch (type) {
