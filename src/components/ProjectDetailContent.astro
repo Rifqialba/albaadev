@@ -219,14 +219,14 @@ function getTikTokVideoId(url: string): string | null {
               <h3 class="text-lg font-medium text-black dark:text-white mb-4">
                 {demoType === "website" ? "Website Preview" : demoType === "ml" ? "Model Visualization" : "Program Interface"}
               </h3>
-              <div class="border rounded-lg overflow-hidden border-black/15 dark:border-white/20 bg-gray-50 dark:bg-gray-900 p-6 flex items-center justify-center min-h-[400px] shadow-lg">
-                <img
-                  src={resultImage}
-                  alt="Project Screenshot"
-                  class="w-full h-auto max-h-[350px] object-contain"
-                  loading="lazy"
-                />
-              </div>
+              <div class="border rounded-lg overflow-hidden border-black/15 dark:border-white/20 bg-gray-50 dark:bg-gray-900 shadow-lg">
+  <img
+    src={resultImage}
+    alt="Project Screenshot"
+    class="w-full h-full object-cover"
+    loading="lazy"
+  />
+</div>
             </div>
           )}
 
