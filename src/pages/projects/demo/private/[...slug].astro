@@ -8,11 +8,14 @@ import { PROJECTS } from "@consts";
 
 // Generate static paths for all projects
 export async function getStaticPaths() {
-  const projects = await getCollection("projects");
-  return projects.map((project) => ({
-    params: { slug: project.slug },
-    props: { project },
-  }));
+  const projects = (await getCollection("projects")) || [];
+
+  return projects
+    .filter((project) => project?.slug)
+    .map((project) => ({
+      params: { slug: [project.slug] }, 
+      props: { project },
+    }));
 }
 
 // Get the requested project
