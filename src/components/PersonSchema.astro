@@ -1,0 +1,25 @@
+---
+// src/components/PersonSchema.astro
+import { SITE, SOCIALS } from "@consts";
+
+const siteUrl = Astro.site?.href || "https://albaporto.vercel.app";
+const name = SITE.TITLE;
+const description = SITE.DESCRIPTION;
+const sameAs = SOCIALS.filter(s => s.HREF && (s.HREF.startsWith('http') || s.HREF.startsWith('https'))).map(s => s.HREF);
+---
+
+<script type="application/ld+json" set:html={JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": name,
+  "url": siteUrl,
+  "description": description,
+  "sameAs": sameAs,
+  "image": `${siteUrl}/ra.webp`,
+  "jobTitle": "Fullstack & Data Platform Engineer",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Freelance / Self-Employed"
+  },
+  "knowsAbout": ["Web Development", "Machine Learning", "Data Engineering", "Google Cloud Platform", "Next.js", "TypeScript"]
+})} />
